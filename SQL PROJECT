@@ -1,0 +1,258 @@
+-- ✅ DDL: Database banana (naya DB create)
+CREATE DATABASE ORG_DB;        -- Naya database ORG_DB banaya
+USE ORG_DB;                    -- Ab hum isi database mein kaam karenge
+
+-- ✅ DDL: Tables design (schema) — real-world HR + Payroll + Accounts + Customers
+-- Employees: core master table
+CREATE TABLE employees (
+  id INT PRIMARY KEY AUTO_INCREMENT,       -- Unique employee ID, auto increment (roll-number jaisa)
+  name VARCHAR(50) NOT NULL,               -- Employee ka naam (empty allow nahi)
+  department VARCHAR(30) NOT NULL,         -- Department (e.g., Data Science, HR)
+  salary DECIMAL(10,2) NOT NULL,           -- Salary with 2 decimal places (₹ format)
+  hired_at DATE DEFAULT (CURRENT_DATE)     -- Hiring date (default: aaj ki date)
+);
+
+-- Payroll: transactional payments linked to employees
+CREATE TABLE payroll (
+  id INT PRIMARY KEY AUTO_INCREMENT,       -- Unique payment record
+  emp_id INT NOT NULL,                     -- Kis employee ko payment hua (FK)
+  amount DECIMAL(10,2) NOT NULL,           -- Payment amount
+  payment_date DATE NOT NULL,              -- Payment date
+  CONSTRAINT fk_payroll_emp FOREIGN KEY (emp_id) REFERENCES employees(id)   -- Relationship set
+);
+
+-- Accounts: banking style table for transactions example
+CREATE TABLE accounts (
+  id INT PRIMARY KEY AUTO_INCREMENT,       -- Account ID
+  holder VARCHAR(50) NOT NULL,             -- Account holder name
+  balance DECIMAL(12,2) NOT NULL DEFAULT 0 -- Current balance
+);
+
+-- Customers: JSON use-case (modern apps store semi-structured details)
+CREATE TABLE customers (
+  id INT PRIMARY KEY AUTO_INCREMENT,       -- Customer ID
+  name VARCHAR(50) NOT NULL,               -- Customer name
+  details JSON                             -- JSON blob (address, preferences, etc.)
+);
+
+-- Indexes for common queries (fast lookups on filters)
+CREATE INDEX idx_employees_department ON employees(department);  -- Department filter fast
+CREATE INDEX idx_payroll_emp_date ON payroll(emp_id, payment_date); -- Emp + date queries fast
+
+
+
+-- ✅ INSERT: data add karna (employees)
+INSERT INTO employees (name, department, salary)
+VALUES
+('MOHAN', 'Data Science', 50000),
+('REKHA', 'HR', 42000),
+('AMIT', 'Data Science', 70000),
+('PRIYA', 'Finance', 65000);
+
+-- ✅ SELECT: saare records dekhna (quick sanity check)
+SELECT * FROM employees;   -- Full table snapshot
+
+-- ✅ FILTER + SORT + LIMIT: real-world reporting
+SELECT name, salary
+FROM employees
+WHERE department = 'Data Science'  -- Sirf Data Science wale
+ORDER BY salary DESC               -- Highest salary pehle
+LIMIT 5;                           -- Top 5 only
+
+-- ✅ UPDATE: salary revise karna
+UPDATE employees
+SET salary = salary * 1.05         -- 5% increment
+WHERE department = 'HR';           -- Sirf HR ke liye
+
+-- ✅ DELETE: record hataana (caution)
+DELETE FROM employees
+WHERE name = 'AMIT' AND department = 'Data Science';  -- Specific record delete
+
+-- ✅ Payroll inserts (emp_id link employees.id se)
+INSERT INTO payroll (emp_id, amount, payment_date)
+VALUES
+(1, 50000, '2025-11-01'),
+(2, 42000, '2025-11-01'),
+(4, 65000, '2025-11-01');
+
+-- ✅ INNER JOIN: HR + Payroll (sirf matching records)
+SELECT e.name, p.payment_date, p.amount
+FROM employees e
+INNER JOIN payroll p ON e.id = p.emp_id;   -- Common emp records only
+
+-- ✅ LEFT JOIN: employees ke saare, chahe payroll ho ya na ho
+SELECT e.name, p.payment_date, p.amount
+FROM employees e
+LEFT JOIN payroll p ON e.id = p.emp_id;    -- Unpaid employees bhi dikhenge (NULL amounts)
+
+-- ✅ Aggregation: department-wise average salary (reporting)
+SELECT department, AVG(salary) AS avg_salary
+FROM employees
+GROUP BY department;                       -- Summary per department
+
+-- ✅ Add business rule: Min salary check via generated column or application logic
+-- MySQL CHECK is limited; better to enforce in app or via trigger.
+-- Example: Trigger to enforce MIN salary = 30000
+DELIMITER //
+CREATE TRIGGER trg_min_salary BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+  IF NEW.salary < 30000 THEN
+    SET NEW.salary = 30000;        -- Floor enforce: rookie mistakes avoid
+  END IF;
+END //
+DELIMITER ;
+
+-- ✅ Stored Procedure: reusable query (find high earners)
+DELIMITER //
+CREATE PROCEDURE GetHighSalaryEmployees(IN threshold DECIMAL(10,2))
+BEGIN
+  SELECT * FROM employees WHERE salary > threshold;   -- Param-driven filter
+END //
+DELIMITER ;
+
+CALL GetHighSalaryEmployees(50000);   -- Use-case: dashboard filter
+
+-- ✅ Scalar Function: normalize department text
+DELIMITER //
+CREATE FUNCTION normalize_dept(dept VARCHAR(30))
+RETURNS VARCHAR(30)
+DETERMINISTIC
+BEGIN
+  RETURN UPPER(TRIM(dept));   -- Clean + uppercase
+END //
+DELIMITER ;
+
+-- Use function in query
+SELECT id, name, normalize_dept(department) AS dept_clean
+FROM employees;
+
+
+-- ✅ Accounts seed data
+INSERT INTO accounts (holder, balance) VALUES
+('Alice', 10000),
+('Bob', 2000);
+
+-- ✅ Transaction: atomic money transfer (either fully succeeds or rolls back)
+START TRANSACTION;                                -- Begin
+UPDATE accounts SET balance = balance - 1000 WHERE holder = 'Alice';  -- Debit Alice
+UPDATE accounts SET balance = balance + 1000 WHERE holder = 'Bob';    -- Credit Bob
+
+-- Validate: prevent negative balance (simple guard)
+-- If any issue, ROLLBACK; else COMMIT;
+COMMIT;                                           -- Save changes
+-- ROLLBACK;                                     -- Use if any step fails
+
+
+-- ✅ Before-insert trigger: department ko uppercase enforce
+DELIMITER //
+CREATE TRIGGER before_insert_employee
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+  SET NEW.department = UPPER(NEW.department);  -- Consistent data format
+END //
+DELIMITER ;
+
+
+-- ✅ Ranking: salary-based rank (analytics dashboards)
+SELECT name, department, salary,
+       RANK() OVER (ORDER BY salary DESC) AS salary_rank     -- Ties share rank
+FROM employees;
+
+-- ✅ Running totals: department-wise cumulative payroll
+SELECT e.department, p.payment_date, p.amount,
+       SUM(p.amount) OVER (PARTITION BY e.department ORDER BY p.payment_date) AS dept_running_total
+FROM payroll p
+JOIN employees e ON e.id = p.emp_id;
+
+
+-- ✅ Subquery: department with above-average salaries
+SELECT name, department, salarystudent
+FROM employees
+WHERE salary > (
+  SELECT AVG(salary) FROM employees WHERE department = 'Data Science'  -- Dept avg
+);
+
+-- ✅ CTE: readable stepwise logic (MySQL 8+)
+WITH dept_stats AS (
+  SELECT department, AVG(salary) AS avg_sal, COUNT(*) AS cnt
+  FROM employees
+  GROUP BY department
+)
+SELECT e.name, e.department, e.salary, d.avg_sal, d.cnt
+FROM employees e
+JOIN dept_stats d ON e.department = d.department;
+
+-- ✅ View: saved query for reporting
+CREATE OR REPLACE VIEW v_dept_summary AS
+SELECT department, COUNT(*) AS emp_count, AVG(salary) AS avg_salary
+FROM employees
+GROUP BY department;
+
+-- Use the view
+SELECT * FROM v_dept_summary;
+
+SELECT name,
+       CASE
+         WHEN salary >= 70000 THEN 'High'
+         WHEN salary >= 50000 THEN 'Mid'
+         ELSE 'Low'
+       END AS band
+FROM employees;
+
+
+-- ✅ Index already created above; use EXPLAIN to inspect query plan
+EXPLAIN SELECT * FROM employees WHERE department = 'Data Science';  -- Check if idx used
+
+-- ✅ Covering index example (composite index for frequent filter + select)
+CREATE INDEX idx_emp_dept_salary ON employees(department, salary);  -- Good for dept+salary filters
+
+-- ✅ Avoid SELECT * in production; select needed columns only (I/O save)
+SELECT name, department FROM employees WHERE department = 'HR';      -- Lean select
+
+
+
+-- ✅ User create + grant principle of least privilege
+CREATE USER 'root'@'Beunique' IDENTIFIED BY 'password123';   -- New DB user
+GRANT SELECT, INSERT, UPDATE ON ORG_DB.* TO 'vaibhav'@'localhost'; -- Limited rights
+-- REVOKE privileges if needed: REVOKE INSERT ON ORG_DB.* FROM 'vaibhav'@'localhost';
+
+-- ✅ Show grants
+SHOW GRANTS FOR 'vaibhav'@'localhost';
+
+-- ✅ Enable event scheduler (server-level; may require global privilege)
+-- SET GLOBAL event_scheduler = ON;     -- Scheduler on (use cautiously on shared servers)
+
+-- ✅ Example: monthly payroll summary snapshot (demo)
+DELIMITER //
+CREATE EVENT IF NOT EXISTS ev_monthly_payroll_summary
+ON SCHEDULE EVERY 1 MONTH STARTS '2025-12-01 00:00:00'
+DO
+BEGIN
+  INSERT INTO payroll (emp_id, amount, payment_date)
+  SELECT id, salary, LAST_DAY(CURRENT_DATE)    -- Demo: salary as amount at month end
+  FROM employees;
+END //
+DELIMITER ;
+
+-- ✅ Partition example (range partition on payment_date; helps big tables)
+-- Note: Requires empty table or redefinition via exchange
+CREATE TABLE payroll_partitioned (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  emp_id INT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  payment_date DATE NOT NULL,
+  INDEX (payment_date)
+)
+PARTITION BY RANGE (YEAR(payment_date)) (
+  PARTITION p2024 VALUES LESS THAN (2025),
+  PARTITION p2025 VALUES LESS THAN (2026),
+  PARTITION pmax VALUES LESS THAN MAXVALUE
+);
+CREATE USER 'student'@'%' IDENTIFIED BY 'password123';   -- New DB user
+GRANT SELECT ON ORG_DB.* TO 'student'@'%'; -- Limited rights
+-- REVOKE privileges if needed: REVOKE INSERT ON ORG_DB.* FROM 'vaibhav'@'localhost';
+
+-- ✅ Show grants
+SHOW GRANTS FOR 'student'@'%';
