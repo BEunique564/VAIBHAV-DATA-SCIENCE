@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Classroom Package – Hinglish Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;800&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f14;
+  --surface: #151820;
+  --card: #1c2030;
+  --border: #2a3050;
+  --accent1: #7c6af7;
+  --accent2: #f97316;
+  --accent3: #22d3ee;
+  --accent4: #4ade80;
+  --accent5: #f43f5e;
+  --text: #e8eaf0;
+  --muted: #8b93b0;
+  --code-bg: #0a0c12;
+  --sup-color: #7c6af7;
+  --unsup-color: #22d3ee;
+  --semi-color: #f97316;
+  --rl-color: #4ade80;
+  --dl-color: #f43f5e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+}
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #0d0f14 0%, #12183a 50%, #0d1520 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(124,106,247,0.15) 0%, transparent 70%),
+              radial-gradient(ellipse 40% 40% at 20% 80%, rgba(34,211,238,0.1) 0%, transparent 70%);
+}
+.hero-inner { position: relative; max-width: 960px; margin: 0 auto; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(124,106,247,0.15);
+  border: 1px solid rgba(124,106,247,0.4);
+  color: var(--accent1);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.hero h1 span { color: var(--accent1); }
+.hero .subtitle {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 600px;
+  margin-bottom: 28px;
+}
+.algo-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  border: 1px solid;
+}
+.pill.sup { background: rgba(124,106,247,0.15); border-color: rgba(124,106,247,0.5); color: #a89ffe; }
+.pill.unsup { background: rgba(34,211,238,0.1); border-color: rgba(34,211,238,0.4); color: #67e8f9; }
+.pill.semi { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.4); color: #fdba74; }
+.pill.rl { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.4); color: #86efac; }
+.pill.dl { background: rgba(244,63,94,0.1); border-color: rgba(244,63,94,0.4); color: #fda4af; }
+
+/* NAV */
+.toc {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  position: sticky; top: 0; z-index: 100;
+  display: flex; gap: 4px; overflow-x: auto;
+}
+.toc a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 14px 12px;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.toc a:hover { color: var(--text); border-bottom-color: var(--accent1); }
+
+/* MAIN LAYOUT */
+.main { max-width: 1000px; margin: 0 auto; padding: 40px 24px 80px; }
+
+/* SECTION */
+.section { margin-bottom: 64px; }
+.section-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-title .icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+/* CHEATSHEET */
+.cheatsheet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.cs-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  border-top: 3px solid;
+}
+.cs-card.sup { border-top-color: var(--sup-color); }
+.cs-card.unsup { border-top-color: var(--unsup-color); }
+.cs-card.semi { border-top-color: var(--semi-color); }
+.cs-card.rl { border-top-color: var(--rl-color); }
+.cs-card.dl { border-top-color: var(--dl-color); }
+.cs-card h3 {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.cs-card h3 .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.sup .dot { background: var(--sup-color); }
+.unsup .dot { background: var(--unsup-color); }
+.semi .dot { background: var(--semi-color); }
+.rl .dot { background: var(--rl-color); }
+.dl .dot { background: var(--dl-color); }
+.cs-row { display: flex; gap: 6px; margin-bottom: 6px; font-size: 13px; }
+.cs-key { color: var(--muted); min-width: 80px; }
+.cs-val { color: var(--text); font-size: 12.5px; }
+.hook-box {
+  margin-top: 12px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--accent3);
+  border-left: 3px solid var(--accent3);
+}
+
+/* ALGO BLOCKS */
+.algo-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+.algo-header {
+  padding: 20px 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.algo-header.sup { background: linear-gradient(135deg, rgba(124,106,247,0.12) 0%, transparent 100%); }
+.algo-header.unsup { background: linear-gradient(135deg, rgba(34,211,238,0.1) 0%, transparent 100%); }
+.algo-header.semi { background: linear-gradient(135deg, rgba(249,115,22,0.1) 0%, transparent 100%); }
+.algo-header.rl { background: linear-gradient(135deg, rgba(74,222,128,0.1) 0%, transparent 100%); }
+.algo-header.dl { background: linear-gradient(135deg, rgba(244,63,94,0.1) 0%, transparent 100%); }
+.algo-name {
+  font-size: 20px;
+  font-weight: 800;
+}
+.algo-sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--muted);
+}
+.algo-body { padding: 20px 24px; }
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.info-tile {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.info-tile .label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.info-tile .value { font-size: 13px; line-height: 1.5; }
+.green { color: #4ade80; }
+.red { color: #f87171; }
+.orange { color: #fb923c; }
+.yellow { color: #facc15; }
+
+/* CODE BLOCK */
+.code-wrap { position: relative; margin: 16px 0; }
+.code-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  border-radius: 10px 10px 0 0;
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 0 0 10px 10px;
+  padding: 20px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.8;
+  tab-size: 4;
+}
+.kw { color: #c084fc; }        /* keyword */
+.fn { color: #67e8f9; }        /* function */
+.str { color: #86efac; }       /* string */
+.num { color: #fdba74; }       /* number */
+.cm { color: #4b5563; font-style: italic; }  /* comment – dark */
+.cm.hi { color: #6b7280; }     /* slightly lighter comment */
+.var { color: #e8eaf0; }
+.imp { color: #a5b4fc; }       /* import */
+.cls { color: #fb923c; }       /* class name */
+
+/* VIZ IDEAS */
+.viz-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.viz-box .icon2 { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+/* QUIZ */
+.quiz-grid { display: flex; flex-direction: column; gap: 20px; }
+.quiz-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.quiz-q {
+  padding: 16px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+}
+.quiz-num {
+  background: var(--accent1);
+  color: white;
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.quiz-options {
+  padding: 14px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.opt {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt:hover { background: rgba(255,255,255,0.05); }
+.opt.correct { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.4); color: #86efac; }
+.opt.wrong { opacity: 0.4; }
+.answer-reveal {
+  padding: 10px 20px 14px;
+  font-size: 12px;
+  color: #86efac;
+  border-top: 1px solid var(--border);
+}
+.answer-reveal strong { color: #4ade80; }
+
+/* EXERCISES */
+.ex-grid { display: flex; flex-direction: column; gap: 24px; }
+.ex-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.ex-header {
+  padding: 14px 20px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.ex-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(124,106,247,0.2);
+  color: var(--accent1);
+}
+.ex-title { font-size: 15px; font-weight: 700; }
+.ex-body { padding: 18px 20px; }
+.ex-body p { font-size: 13.5px; margin-bottom: 12px; color: var(--muted); }
+.ex-output {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent4);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #86efac;
+  margin-top: 10px;
+}
+
+/* PROJECT IDEAS */
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.proj-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+}
+.proj-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  border-radius: 0 16px 0 80px;
+  opacity: 0.15;
+}
+.proj-card:nth-child(1)::before { background: var(--accent1); }
+.proj-card:nth-child(2)::before { background: var(--accent2); }
+.proj-card:nth-child(3)::before { background: var(--accent3); }
+.proj-num {
+  font-size: 40px;
+  font-weight: 800;
+  opacity: 0.06;
+  position: absolute;
+  top: 8px; right: 16px;
+  line-height: 1;
+}
+.proj-tag {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.proj-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.proj-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.proj-deliverables {
+  font-size: 12px;
+  color: var(--text);
+}
+.proj-deliverables .d-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  align-items: flex-start;
+}
+.proj-deliverables .d-item::before {
+  content: '→';
+  color: var(--accent1);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* CHECKLIST */
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.check-group {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+}
+.check-group h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--accent3);
+  display: flex; align-items: center; gap: 8px;
+}
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 12.5px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.check-item:last-child { border-bottom: none; }
+.checkbox {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* DIVIDER */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 48px 0;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 32px;
+  color: var(--muted);
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media (max-width: 600px) {
+  .hero { padding: 32px 20px 28px; }
+  .main { padding: 28px 16px 60px; }
+  .toc { padding: 0 16px; }
+  .quiz-options { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🎓 Classroom-Ready Package · Hinglish Edition</div>
+    <h1>Machine Learning ka<br><span>Complete Classroom Pack</span></h1>
+    <p class="subtitle">Beginners ke liye — Python basics jaanne wale students ke liye. Explanations Hinglish mein, code English mein. Har line pe comment hai.</p>
+    <div class="algo-pills">
+      <span class="pill sup">Supervised Learning</span>
+      <span class="pill unsup">Unsupervised Learning</span>
+      <span class="pill semi">Semi-Supervised Learning</span>
+      <span class="pill rl">Reinforcement Learning</span>
+      <span class="pill dl">Deep Learning</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="toc">
+  <a href="#cheatsheet">📋 Cheatsheet</a>
+  <a href="#supervised">🟣 Supervised</a>
+  <a href="#unsupervised">🔵 Unsupervised</a>
+  <a href="#semi">🟠 Semi-Supervised</a>
+  <a href="#rl">🟢 RL</a>
+  <a href="#dl">🔴 Deep Learning</a>
+  <a href="#quiz">❓ Quiz</a>
+  <a href="#exercises">💪 Exercises</a>
+  <a href="#projects">🚀 Projects</a>
+  <a href="#checklist">✅ Checklist</a>
+</nav>
+
+<div class="main">
+
+<!-- ===================== SECTION 1: CHEATSHEET ===================== -->
+<div class="section" id="cheatsheet">
+  <div class="section-label">Section 01</div>
+  <div class="section-title">📋 Ek-Page Hinglish Cheatsheet</div>
+
+  <div class="cheatsheet-grid">
+
+    <!-- SUPERVISED -->
+    <div class="cs-card sup">
+      <h3><span class="dot"></span> Supervised Learning</h3>
+      <div class="cs-row"><span class="cs-key">Kya hai?</span><span class="cs-val">Labeled data se seekhna — teacher ke saath padhna</span></div>
+      <div class="cs-row"><span class="cs-key">Dataset</span><span class="cs-val">Iris (classification), Boston Housing (regression)</span></div>
+      <div class="cs-row"><span class="cs-key">Algorithms</span><span class="cs-val">Decision Tree, Logistic Regression, KNN, SVM</span></div>
+      <div class="cs-row"><span class="cs-key">Metric</span><span class="cs-val">Accuracy, Precision, Recall, F1, MSE</span></div>
+      <div class="cs-row"><span class="cs-key">Use karo</span><span class="cs-val">Jab labels available ho — spam, fraud, medical</span></div>
+      <div class="cs-row"><span class="cs-key">Mat karo</span><span class="cs-val">Jab labels nahi, ya data bahut kam ho</span></div>
+      <div class="cs-row"><span class="cs-key">Pitfall</span><span class="cs-val">Overfitting — train pe 99%, test pe 60%</span></div>
+      <div class="hook-box">🧠 Hook: "Labels hain toh supervised — teacher ne copy check ki!"</div>
+    </div>
+
+    <!-- UNSUPERVISED -->
+    <div class="cs-card unsup">
+      <h3><span class="dot"></span> Unsupervised Learning</h3>
+      <div class="cs-row"><span class="cs-key">Kya hai?</span><span class="cs-val">Bina labels ke patterns dhundhna — khud seekhna</span></div>
+      <div class="cs-row"><span class="cs-key">Dataset</span><span class="cs-val">make_blobs, wine, customer data</span></div>
+      <div class="cs-row"><span class="cs-key">Algorithms</span><span class="cs-val">K-Means, DBSCAN, PCA, Agglomerative</span></div>
+      <div class="cs-row"><span class="cs-key">Metric</span><span class="cs-val">Silhouette Score, Inertia, Davies-Bouldin</span></div>
+      <div class="cs-row"><span class="cs-key">Use karo</span><span class="cs-val">Customer segmentation, anomaly detection, EDA</span></div>
+      <div class="cs-row"><span class="cs-key">Mat karo</span><span class="cs-val">Jab prediction chahiye ho — regression/classification</span></div>
+      <div class="cs-row"><span class="cs-key">Pitfall</span><span class="cs-val">Wrong k choose karna — Elbow method use karo</span></div>
+      <div class="hook-box">🧠 Hook: "No labels, no problem — explorer ki tarah dhundho!"</div>
+    </div>
+
+    <!-- SEMI-SUPERVISED -->
+    <div class="cs-card semi">
+      <h3><span class="dot"></span> Semi-Supervised Learning</h3>
+      <div class="cs-row"><span class="cs-key">Kya hai?</span><span class="cs-val">Thoda labeled + bahut saara unlabeled data</span></div>
+      <div class="cs-row"><span class="cs-key">Dataset</span><span class="cs-val">Iris (partially masked labels)</span></div>
+      <div class="cs-row"><span class="cs-key">Algorithms</span><span class="cs-val">Label Propagation, Label Spreading, Self-Training</span></div>
+      <div class="cs-row"><span class="cs-key">Metric</span><span class="cs-val">Accuracy on labeled portion</span></div>
+      <div class="cs-row"><span class="cs-key">Use karo</span><span class="cs-val">Medical imaging — labeling expensive hai</span></div>
+      <div class="cs-row"><span class="cs-key">Mat karo</span><span class="cs-val">Jab sab labels available ho — supervised better</span></div>
+      <div class="cs-row"><span class="cs-key">Pitfall</span><span class="cs-val">Noisy pseudo-labels poore model ko bigaad dete hain</span></div>
+      <div class="hook-box">🧠 Hook: "Kuch notes hain, kuch rote karo — semi-supervised!"</div>
+    </div>
+
+    <!-- RL -->
+    <div class="cs-card rl">
+      <h3><span class="dot"></span> Reinforcement Learning</h3>
+      <div class="cs-row"><span class="cs-key">Kya hai?</span><span class="cs-val">Agent environment mein action le, reward paaye</span></div>
+      <div class="cs-row"><span class="cs-key">Dataset</span><span class="cs-val">CartPole-v1 (gym environment)</span></div>
+      <div class="cs-row"><span class="cs-key">Algorithms</span><span class="cs-val">Q-Learning, DQN, PPO, A3C</span></div>
+      <div class="cs-row"><span class="cs-key">Metric</span><span class="cs-val">Episode Reward, Steps survived</span></div>
+      <div class="cs-row"><span class="cs-key">Use karo</span><span class="cs-val">Games, robotics, trading, recommendations</span></div>
+      <div class="cs-row"><span class="cs-key">Mat karo</span><span class="cs-val">Static datasets mein — environment chahiye hota hai</span></div>
+      <div class="cs-row"><span class="cs-key">Pitfall</span><span class="cs-val">Reward shaping — galat reward = galat behaviour</span></div>
+      <div class="hook-box">🧠 Hook: "Baccha gir ke seekhta hai — RL bhi aisa hi!"</div>
+    </div>
+
+    <!-- DL -->
+    <div class="cs-card dl">
+      <h3><span class="dot"></span> Deep Learning (PyTorch)</h3>
+      <div class="cs-row"><span class="cs-key">Kya hai?</span><span class="cs-val">Neural networks — brain ki tarah layers mein seekhna</span></div>
+      <div class="cs-row"><span class="cs-key">Dataset</span><span class="cs-val">MNIST / FashionMNIST (28×28 images)</span></div>
+      <div class="cs-row"><span class="cs-key">Algorithms</span><span class="cs-val">MLP, CNN, RNN, Transformer</span></div>
+      <div class="cs-row"><span class="cs-key">Metric</span><span class="cs-val">Loss (CrossEntropy), Accuracy per epoch</span></div>
+      <div class="cs-row"><span class="cs-key">Use karo</span><span class="cs-val">Images, text, audio — complex patterns</span></div>
+      <div class="cs-row"><span class="cs-key">Mat karo</span><span class="cs-val">Chhote datasets mein — traditional ML better hai</span></div>
+      <div class="cs-row"><span class="cs-key">Pitfall</span><span class="cs-val">Vanishing gradients, wrong learning rate</span></div>
+      <div class="hook-box">🧠 Hook: "Deep = bahut saari layers — pyramid ki tarah!"</div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SECTION 2: SUPERVISED ===================== -->
+<div class="section" id="supervised">
+  <div class="section-label">Section 02</div>
+  <div class="section-title">🟣 Supervised Learning — Decision Tree on Iris</div>
+
+  <div class="algo-block">
+    <div class="algo-header sup">
+      <div>
+        <div class="algo-name">Supervised Learning</div>
+        <div class="algo-sub">Iris Dataset · Decision Tree Classifier · scikit-learn</div>
+      </div>
+      <div class="badge-row">
+        <span class="badge">iris</span>
+        <span class="badge">sklearn</span>
+        <span class="badge">classification</span>
+      </div>
+    </div>
+    <div class="algo-body">
+      <div class="info-grid">
+        <div class="info-tile">
+          <div class="label">🎯 Intuition</div>
+          <div class="value">Labeled data hai — "ye flower Setosa hai, ye Versicolor" — model seekhta hai rules. Bilkul ek experienced doctor ki tarah jo symptoms dekh ke diagnosis karta hai.</div>
+        </div>
+        <div class="info-tile">
+          <div class="label">✅ Kab Use Karein</div>
+          <div class="value class="green">Jab <strong class="green">labels available ho</strong> — spam detection, disease prediction, image classification</div>
+        </div>
+        <div class="info-tile">
+          <div class="label">🚫 Kab Mat Karein</div>
+          <div class="value"><span class="red">Labels milna mushkil ho, ya data bahut chhota ho (&lt;50 samples)</span></div>
+        </div>
+        <div class="info-tile">
+          <div class="label">⚠️ Common Pitfalls</div>
+          <div class="value"><span class="orange">Overfitting (max_depth limit karo), Class imbalance (stratify use karo), Data leakage</span></div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">📦 Imports &amp; Supervised Learning — Iris Dataset</div>
+<pre><span class="cm hi"># --- Zaroori libraries import karo ---</span>
+<span class="kw">from</span> <span class="imp">sklearn.datasets</span> <span class="kw">import</span> load_iris          <span class="cm"># Iris dataset load karne ke liye</span>
+<span class="kw">from</span> <span class="imp">sklearn.model_selection</span> <span class="kw">import</span> train_test_split  <span class="cm"># Data ko train/test mein todne ke liye</span>
+<span class="kw">from</span> <span class="imp">sklearn.tree</span> <span class="kw">import</span> DecisionTreeClassifier  <span class="cm"># Hamara model — decision tree</span>
+<span class="kw">from</span> <span class="imp">sklearn.metrics</span> <span class="kw">import</span> accuracy_score, classification_report  <span class="cm"># Model test karne ke liye</span>
+<span class="kw">import</span> <span class="imp">matplotlib.pyplot</span> <span class="kw">as</span> plt                <span class="cm"># Graph banana ke liye</span>
+<span class="kw">from</span> <span class="imp">sklearn.tree</span> <span class="kw">import</span> plot_tree                <span class="cm"># Decision tree ko visualize karne ke liye</span>
+
+<span class="cm hi"># --- Data load karo ---</span>
+iris = load_iris()                                  <span class="cm"># Iris dataset — 150 flowers, 4 features</span>
+X, y = iris.data, iris.target                       <span class="cm"># X = features, y = labels (0,1,2 = teen species)</span>
+
+<span class="cm hi"># --- Data split karo: 80% train, 20% test ---</span>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="num">0.2</span>, random_state=<span class="num">42</span>, stratify=y  <span class="cm"># stratify = har class equal rakhna</span>
+)
+
+<span class="cm hi"># --- Model banao aur train karo ---</span>
+model = DecisionTreeClassifier(max_depth=<span class="num">3</span>, random_state=<span class="num">42</span>)  <span class="cm"># max_depth=3 se overfitting rokein</span>
+model.fit(X_train, y_train)                         <span class="cm"># Model training shuru — "padhai karo!"</span>
+
+<span class="cm hi"># --- Test karo aur results dekho ---</span>
+y_pred = model.predict(X_test)                      <span class="cm"># Naye data pe predict karo</span>
+acc = accuracy_score(y_test, y_pred)                <span class="cm"># Kitne sahi jawab? Accuracy calculate karo</span>
+<span class="fn">print</span>(<span class="str">f"✅ Accuracy: {acc:.2%}"</span>)                     <span class="cm"># Result print karo</span>
+<span class="fn">print</span>(classification_report(y_test, y_pred,         <span class="cm"># Detailed report — precision, recall, f1</span>
+      target_names=iris.target_names))
+
+<span class="cm hi"># --- Decision Tree visualize karo ---</span>
+plt.figure(figsize=(<span class="num">14</span>, <span class="num">5</span>))                          <span class="cm"># Plot ka size set karo</span>
+plot_tree(model, feature_names=iris.feature_names,   <span class="cm"># Feature names show karo tree mein</span>
+          class_names=iris.target_names, filled=<span class="kw">True</span>,
+          rounded=<span class="kw">True</span>)
+plt.title(<span class="str">"Iris Decision Tree — Depth 3"</span>)
+plt.tight_layout(); plt.show()</pre>
+      </div>
+
+      <div class="viz-box">
+        <span class="icon2">📊</span>
+        <div><strong style="color: var(--text);">Visualization Idea:</strong> plot_tree() se colorful decision tree banao — har node pe condition dikhao. Alag plot mein scatter plot banao jahan do features (sepal length vs width) pe colors se classes dikhao. Students ko clearly dikh jaata hai "boundary" kahan hai.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SECTION 3: UNSUPERVISED ===================== -->
+<div class="section" id="unsupervised">
+  <div class="section-label">Section 03</div>
+  <div class="section-title">🔵 Unsupervised Learning — K-Means Clustering</div>
+
+  <div class="algo-block">
+    <div class="algo-header unsup">
+      <div>
+        <div class="algo-name">Unsupervised Learning</div>
+        <div class="algo-sub">make_blobs / Wine Dataset · K-Means · scikit-learn</div>
+      </div>
+      <div class="badge-row">
+        <span class="badge">make_blobs</span>
+        <span class="badge">wine</span>
+        <span class="badge">clustering</span>
+        <span class="badge">PCA</span>
+      </div>
+    </div>
+    <div class="algo-body">
+      <div class="info-grid">
+        <div class="info-tile">
+          <div class="label">🎯 Intuition</div>
+          <div class="value">Koi labels nahi — data mein khud groups dhundho. Jaise library mein books automatically genre se arrange ho jayein bina kisi ne bataye.</div>
+        </div>
+        <div class="info-tile">
+          <div class="label">✅ Kab Use Karein</div>
+          <div class="value"><span class="green">Customer segmentation, document clustering, anomaly detection, EDA (exploratory analysis)</span></div>
+        </div>
+        <div class="info-tile">
+          <div class="label">🚫 Kab Mat Karein</div>
+          <div class="value"><span class="red">Jab clear prediction chahiye — regression ya classification better hai</span></div>
+        </div>
+        <div class="info-tile">
+          <div class="label">⚠️ Common Pitfalls</div>
+          <div class="value"><span class="orange">Wrong k value, feature scaling bhool jana (StandardScaler lagao!), non-spherical clusters mein K-Means fail</span></div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">📦 Imports &amp; Unsupervised Learning — K-Means Clustering</div>
+<pre><span class="cm hi"># --- Libraries import karo ---</span>
+<span class="kw">from</span> <span class="imp">sklearn.datasets</span> <span class="kw">import</span> make_blobs           <span class="cm"># Synthetic clustered data banane ke liye</span>
+<span class="kw">from</span> <span class="imp">sklearn.cluster</span> <span class="kw">import</span> KMeans                <span class="cm"># K-Means clustering algorithm</span>
+<span class="kw">from</span> <span class="imp">sklearn.preprocessing</span> <span class="kw">import</span> StandardScaler  <span class="cm"># Features ko scale karna — zaroori hai!</span>
+<span class="kw">from</span> <span class="imp">sklearn.metrics</span> <span class="kw">import</span> silhouette_score       <span class="cm"># Clustering kitna accha hua — score</span>
+<span class="kw">from</span> <span class="imp">sklearn.decomposition</span> <span class="kw">import</span> PCA              <span class="cm"># 2D mein dekhne ke liye dimension reduce</span>
+<span class="kw">import</span> <span class="imp">matplotlib.pyplot</span> <span class="kw">as</span> plt
+<span class="kw">import</span> <span class="imp">numpy</span> <span class="kw">as</span> np
+
+<span class="cm hi"># --- Synthetic data banao (3 clusters) ---</span>
+X, true_labels = make_blobs(n_samples=<span class="num">300</span>, centers=<span class="num">3</span>,  <span class="cm"># 300 points, 3 groups mein</span>
+                             cluster_std=<span class="num">0.8</span>, random_state=<span class="num">42</span>)
+
+<span class="cm hi"># --- Data scale karo (MUST DO!) ---</span>
+scaler = StandardScaler()                            <span class="cm"># Mean=0, std=1 banata hai — fair comparison</span>
+X_scaled = scaler.fit_transform(X)                  <span class="cm"># Scale apply karo</span>
+
+<span class="cm hi"># --- K-Means model banao aur fit karo ---</span>
+kmeans = KMeans(n_clusters=<span class="num">3</span>, random_state=<span class="num">42</span>, n_init=<span class="num">10</span>)  <span class="cm"># 3 clusters dhundho</span>
+labels = kmeans.fit_predict(X_scaled)               <span class="cm"># Har point ko cluster assign karo</span>
+
+<span class="cm hi"># --- Silhouette score se evaluate karo ---</span>
+score = silhouette_score(X_scaled, labels)           <span class="cm"># 1 = perfect, 0 = overlap, -1 = wrong</span>
+<span class="fn">print</span>(<span class="str">f"📊 Silhouette Score: {score:.3f}"</span>)            <span class="cm"># Score print karo</span>
+
+<span class="cm hi"># --- Clusters plot karo ---</span>
+plt.figure(figsize=(<span class="num">8</span>, <span class="num">5</span>))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):                                    <span class="cm"># Har cluster ke liye alag color</span>
+    mask = labels == i
+    plt.scatter(X_scaled[mask, <span class="num">0</span>], X_scaled[mask, <span class="num">1</span>],  <span class="cm"># Cluster points plot karo</span>
+                label=<span class="str">f"Cluster {i}"</span>, alpha=<span class="num">0.7</span>)
+plt.scatter(kmeans.cluster_centers_[:, <span class="num">0</span>],             <span class="cm"># Centers ko star se mark karo</span>
+            kmeans.cluster_centers_[:, <span class="num">1</span>],
+            s=<span class="num">200</span>, marker=<span class="str">'*'</span>, c=<span class="str">'black'</span>, label=<span class="str">'Centers'</span>)
+plt.legend(); plt.title(<span class="str">"K-Means Clustering Result"</span>); plt.show()</pre>
+      </div>
+
+      <div class="viz-box">
+        <span class="icon2">📊</span>
+        <div><strong style="color: var(--text);">Visualization Idea:</strong> Elbow Method plot banao — X axis pe k=1 se 10, Y axis pe inertia (within-cluster sum of squares). Jahan "elbow" bane wahan k best hai. Wine dataset pe PCA se 2D mein reduce karo phir clusters dikhao — students ko clearly groups dikhte hain.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SECTION 4: SEMI-SUPERVISED ===================== -->
+<div class="section" id="semi">
+  <div class="section-label">Section 04</div>
+  <div class="section-title">🟠 Semi-Supervised Learning — Label Propagation</div>
+
+  <div class="algo-block">
+    <div class="algo-header semi">
+      <div>
+        <div class="algo-name">Semi-Supervised Learning</div>
+        <div class="algo-sub">Iris (partial labels) · LabelPropagation · scikit-learn</div>
+      </div>
+      <div class="badge-row">
+        <span class="badge">iris</span>
+        <span class="badge">label propagation</span>
+        <span class="badge">partial labels</span>
+      </div>
+    </div>
+    <div class="algo-body">
+      <div class="info-grid">
+        <div class="info-tile">
+          <div class="label">🎯 Intuition</div>
+          <div class="value">Ek class mein 30 students hain — sirf 5 ke paas notes hain. Baaki 25 unke notes copy karke padhte hain. Isi tarah thode labels se poore data ko label karo.</div>
+        </div>
+        <div class="info-tile">
+          <div class="label">✅ Kab Use Karein</div>
+          <div class="value"><span class="green">Medical imaging (labeling costly), text classification, har jagah jahan labeling expensive ya time-consuming ho</span></div>
+        </div>
+        <div class="info-tile">
+          <div class="label">🚫 Kab Mat Karein</div>
+          <div class="value"><span class="red">Agar sab labels already available hain — supervised ML directly use karo</span></div>
+        </div>
+        <div class="info-tile">
+          <div class="label">⚠️ Common Pitfalls</div>
+          <div class="value"><span class="orange">Initial labeled samples agar wrong ya noisy hain toh error propagate ho jaata hai poore model mein</span></div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">📦 Imports &amp; Semi-Supervised — Label Propagation</div>
+<pre><span class="cm hi"># --- Libraries import karo ---</span>
+<span class="kw">from</span> <span class="imp">sklearn.datasets</span> <span class="kw">import</span> load_iris
+<span class="kw">from</span> <span class="imp">sklearn.semi_supervised</span> <span class="kw">import</span> LabelPropagation  <span class="cm"># Semi-supervised model</span>
+<span class="kw">from</span> <span class="imp">sklearn.metrics</span> <span class="kw">import</span> accuracy_score
+<span class="kw">import</span> <span class="imp">numpy</span> <span class="kw">as</span> np
+
+<span class="cm hi"># --- Data load karo ---</span>
+iris = load_iris()
+X, y = iris.data, iris.target.copy()                 <span class="cm"># copy() isliye taaki original na badlein</span>
+
+<span class="cm hi"># --- Sirf 10% data ko labeled rakhna — baaki -1 (unlabeled) ---</span>
+rng = np.random.RandomState(<span class="num">42</span>)                      <span class="cm"># Reproducible randomness ke liye</span>
+random_unlabeled = rng.rand(y.shape[<span class="num">0</span>]) &lt; <span class="num">0.9</span>        <span class="cm"># 90% ko unlabeled banao</span>
+y_masked = y.copy()
+y_masked[random_unlabeled] = -<span class="num">1</span>                       <span class="cm"># -1 matlab "label nahi pata" — sklearn convention</span>
+
+labeled_count = (y_masked != -<span class="num">1</span>).sum()               <span class="cm"># Kitne labeled hain?</span>
+<span class="fn">print</span>(<span class="str">f"📌 Labeled samples: {labeled_count}/{len(y)}"</span>)  <span class="cm"># Result show karo</span>
+
+<span class="cm hi"># --- Model train karo (labeled + unlabeled dono use karega) ---</span>
+lp = LabelPropagation(kernel=<span class="str">'rbf'</span>, gamma=<span class="num">20</span>)         <span class="cm"># RBF kernel se similarity calculate hogi</span>
+lp.fit(X, y_masked)                                   <span class="cm"># Train karo — -1 wale khud propagate honge</span>
+
+<span class="cm hi"># --- Sirf labeled samples pe accuracy measure karo ---</span>
+labeled_mask = y_masked != -<span class="num">1</span>                         <span class="cm"># Labeled wale hi check karo</span>
+acc = accuracy_score(y[labeled_mask],                  <span class="cm"># Original labels vs predicted</span>
+                     lp.predict(X[labeled_mask]))
+<span class="fn">print</span>(<span class="str">f"✅ Semi-Supervised Accuracy: {acc:.2%}"</span>)
+
+<span class="cm hi"># --- Unlabeled samples ko predict karo ---</span>
+unlabeled_mask = y_masked == -<span class="num">1</span>
+predictions = lp.predict(X[unlabeled_mask])            <span class="cm"># Ye wo students hain jinhe labels mile</span>
+<span class="fn">print</span>(<span class="str">f"🔍 Unlabeled predicted: {len(predictions)} samples"</span>)</pre>
+      </div>
+
+      <div class="viz-box">
+        <span class="icon2">📊</span>
+        <div><strong style="color: var(--text);">Visualization Idea:</strong> Bar chart banao — "Only 5% labeled" vs "10% labeled" vs "30% labeled" accuracy comparison. Students dekhte hain ki thode labels se bhi kaafi accha accuracy mil sakta hai. Ek scatter plot mein labeled points ko bada mark karo, unlabeled ko chhota — propagation visually explain hota hai.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SECTION 5: RL ===================== -->
+<div class="section" id="rl">
+  <div class="section-label">Section 05</div>
+  <div class="section-title">🟢 Reinforcement Learning — CartPole Random Policy</div>
+
+  <div class="algo-block">
+    <div class="algo-header rl">
+      <div>
+        <div class="algo-name">Reinforcement Learning</div>
+        <div class="algo-sub">CartPole-v1 · Random Policy · Gymnasium (gym)</div>
+      </div>
+      <div class="badge-row">
+        <span class="badge">gymnasium</span>
+        <span class="badge">CartPole-v1</span>
+        <span class="badge">random policy</span>
+        <span class="badge">reward</span>
+      </div>
+    </div>
+    <div class="algo-body">
+      <div class="info-grid">
+        <div class="info-tile">
+          <div class="label">🎯 Intuition</div>
+          <div class="value">Ek agent ek environment mein actions leta hai, reward paata hai. Jaise baccha cycle chalana seekhta hai — girta hai, reward milta hai (balance), seekhta hai. CartPole mein pole ko balance rakhna hai.</div>
+        </div>
+        <div class="info-tile">
+          <div class="label">✅ Kab Use Karein</div>
+          <div class="value"><span class="green">Games (chess, Go, video games), robotics control, trading strategies, recommendation systems</span></div>
+        </div>
+        <div class="info-tile">
+          <div class="label">🚫 Kab Mat Karein</div>
+          <div class="value"><span class="red">Jab static labeled dataset hai — RL ke liye environment chahiye, dataset nahi</span></div>
+        </div>
+        <div class="info-tile">
+          <div class="label">⚠️ Common Pitfalls</div>
+          <div class="value"><span class="orange">Reward shaping galat hona, sparse rewards, training unstable hona, hyperparameter sensitivity</span></div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">📦 Imports &amp; RL — CartPole Random Policy (gymnasium)</div>
+<pre><span class="cm hi"># Install: pip install gymnasium</span>
+<span class="cm hi"># --- Libraries import karo ---</span>
+<span class="kw">import</span> <span class="imp">gymnasium</span> <span class="kw">as</span> gym                              <span class="cm"># RL environments ke liye gymnasium</span>
+<span class="kw">import</span> <span class="imp">numpy</span> <span class="kw">as</span> np
+<span class="kw">import</span> <span class="imp">matplotlib.pyplot</span> <span class="kw">as</span> plt
+
+<span class="cm hi"># --- Environment banao ---</span>
+env = gym.make(<span class="str">"CartPole-v1"</span>)                         <span class="cm"># CartPole env — pole balance karo</span>
+n_episodes = <span class="num">50</span>                                       <span class="cm"># 50 games khelenge</span>
+episode_rewards = []                                   <span class="cm"># Har game ka reward store karo</span>
+
+<span class="cm hi"># --- Random policy se khelo ---</span>
+<span class="kw">for</span> ep <span class="kw">in</span> <span class="fn">range</span>(n_episodes):
+    obs, _ = env.reset(seed=ep)                        <span class="cm"># Environment reset karo, observation lo</span>
+    total_reward = <span class="num">0</span>
+
+    <span class="kw">while</span> <span class="kw">True</span>:
+        action = env.action_space.sample()              <span class="cm"># RANDOM action — left ya right (0 ya 1)</span>
+        obs, reward, terminated, truncated, _ = env.step(action)  <span class="cm"># Action lo, result dekho</span>
+        total_reward += reward                          <span class="cm"># Reward collect karo</span>
+        <span class="kw">if</span> terminated <span class="kw">or</span> truncated:                     <span class="cm"># Game khatam? (pole gira ya 500 steps)</span>
+            <span class="kw">break</span>
+
+    episode_rewards.append(total_reward)               <span class="cm"># Is episode ka total reward save karo</span>
+
+env.close()                                            <span class="cm"># Environment band karo</span>
+
+<span class="cm hi"># --- Results print karo ---</span>
+<span class="fn">print</span>(<span class="str">f"🎮 Avg Reward (Random): {np.mean(episode_rewards):.1f}"</span>)   <span class="cm"># Average kitna mila</span>
+<span class="fn">print</span>(<span class="str">f"🏆 Max Reward: {np.max(episode_rewards):.0f}"</span>)             <span class="cm"># Best game</span>
+
+<span class="cm hi"># --- Reward over episodes plot karo ---</span>
+plt.figure(figsize=(<span class="num">9</span>, <span class="num">4</span>))
+plt.plot(episode_rewards, color=<span class="str">"#4ade80"</span>, linewidth=<span class="num">1.5</span>)        <span class="cm"># Reward chart banao</span>
+plt.axhline(np.mean(episode_rewards), color=<span class="str">"red"</span>,              <span class="cm"># Average line add karo</span>
+            linestyle=<span class="str">"--"</span>, label=<span class="str">"Mean Reward"</span>)
+plt.xlabel(<span class="str">"Episode"</span>); plt.ylabel(<span class="str">"Total Reward"</span>)
+plt.title(<span class="str">"CartPole — Random Policy Rewards"</span>)
+plt.legend(); plt.tight_layout(); plt.show()</pre>
+      </div>
+
+      <div class="viz-box">
+        <span class="icon2">📊</span>
+        <div><strong style="color: var(--text);">Visualization Idea:</strong> Episode vs Reward ka line plot banao. Random policy mein reward noisy hoga (8–15 average). Isko baseline ke taur pe dikhao — phir bolain "trained agent 400+ reward laata hai." Students contrast se RL ki importance samjhenge. Agar stable_baselines3 available ho toh PPO train karo aur dono compare karo.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SECTION 6: DEEP LEARNING ===================== -->
+<div class="section" id="dl">
+  <div class="section-label">Section 06</div>
+  <div class="section-title">🔴 Deep Learning — MLP on FashionMNIST (PyTorch)</div>
+
+  <div class="algo-block">
+    <div class="algo-header dl">
+      <div>
+        <div class="algo-name">Deep Learning (MLP)</div>
+        <div class="algo-sub">FashionMNIST · PyTorch · MLP Neural Network</div>
+      </div>
+      <div class="badge-row">
+        <span class="badge">pytorch</span>
+        <span class="badge">FashionMNIST</span>
+        <span class="badge">MLP</span>
+        <span class="badge">neural network</span>
+      </div>
+    </div>
+    <div class="algo-body">
+      <div class="info-grid">
+        <div class="info-tile">
+          <div class="label">🎯 Intuition</div>
+          <div class="value">Neurons ki layers — pehli layer edges dikhti hai, doosri shapes, teesri objects. Brain ki tarah hierarchy mein seekhna. 784 pixels → hidden layers → 10 classes (T-shirt, trouser, etc.)</div>
+        </div>
+        <div class="info-tile">
+          <div class="label">✅ Kab Use Karein</div>
+          <div class="value"><span class="green">Images, text, audio, video — complex high-dimensional data. Large datasets available ho (10k+)</span></div>
+        </div>
+        <div class="info-tile">
+          <div class="label">🚫 Kab Mat Karein</div>
+          <div class="value"><span class="red">Chhota dataset (&lt;1000 samples), tabular simple data, interpretability zaroori ho</span></div>
+        </div>
+        <div class="info-tile">
+          <div class="label">⚠️ Common Pitfalls</div>
+          <div class="value"><span class="orange">Wrong learning rate (sab se common!), not normalizing input, forgetting to call optimizer.zero_grad()</span></div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">📦 Imports &amp; Deep Learning — MLP on FashionMNIST</div>
+<pre><span class="cm hi"># Install: pip install torch torchvision</span>
+<span class="cm hi"># --- Libraries import karo ---</span>
+<span class="kw">import</span> <span class="imp">torch</span>                                           <span class="cm"># PyTorch — DL ka engine</span>
+<span class="kw">import</span> <span class="imp">torch.nn</span> <span class="kw">as</span> nn                                 <span class="cm"># Neural network layers</span>
+<span class="kw">import</span> <span class="imp">torch.optim</span> <span class="kw">as</span> optim                           <span class="cm"># Optimizers (Adam, SGD)</span>
+<span class="kw">from</span> <span class="imp">torchvision</span> <span class="kw">import</span> datasets, transforms           <span class="cm"># Image datasets + transforms</span>
+<span class="kw">from</span> <span class="imp">torch.utils.data</span> <span class="kw">import</span> DataLoader                <span class="cm"># Data batches mein load karne ke liye</span>
+<span class="kw">import</span> <span class="imp">matplotlib.pyplot</span> <span class="kw">as</span> plt
+
+<span class="cm hi"># --- Data prepare karo ---</span>
+transform = transforms.Compose([transforms.ToTensor(),    <span class="cm"># Image → Tensor (0–1 range mein)</span>
+    transforms.Normalize((<span class="num">0.5</span>,), (<span class="num">0.5</span>,))])               <span class="cm"># Normalize: mean=0.5, std=0.5</span>
+
+train_ds = datasets.FashionMNIST(<span class="str">"./data"</span>, train=<span class="kw">True</span>,   <span class="cm"># Training data download karo</span>
+                                  download=<span class="kw">True</span>, transform=transform)
+test_ds  = datasets.FashionMNIST(<span class="str">"./data"</span>, train=<span class="kw">False</span>,  <span class="cm"># Test data download karo</span>
+                                  download=<span class="kw">True</span>, transform=transform)
+train_loader = DataLoader(train_ds, batch_size=<span class="num">64</span>, shuffle=<span class="kw">True</span>)   <span class="cm"># 64 images ek baar mein</span>
+test_loader  = DataLoader(test_ds,  batch_size=<span class="num">64</span>)                   <span class="cm"># Test bhi batches mein</span>
+
+<span class="cm hi"># --- Model define karo (MLP — 3 layers) ---</span>
+<span class="kw">class</span> <span class="cls">MLP</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        self.net = nn.Sequential(                        <span class="cm"># Layers ek ke baad ek</span>
+            nn.Flatten(),                                <span class="cm"># 28x28 image → 784 flat vector</span>
+            nn.Linear(<span class="num">784</span>, <span class="num">256</span>), nn.ReLU(),             <span class="cm"># Layer 1: 784 → 256 neurons</span>
+            nn.Dropout(<span class="num">0.3</span>),                            <span class="cm"># 30% neurons randomly off — overfitting rokne ko</span>
+            nn.Linear(<span class="num">256</span>, <span class="num">128</span>), nn.ReLU(),             <span class="cm"># Layer 2: 256 → 128 neurons</span>
+            nn.Linear(<span class="num">128</span>, <span class="num">10</span>))                         <span class="cm"># Output: 10 classes (10 kapde types)</span>
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x): <span class="kw">return</span> self.net(x)            <span class="cm"># Forward pass — data aage badhao</span>
+
+<span class="cm hi"># --- Setup: device, model, loss, optimizer ---</span>
+device = torch.device(<span class="str">"cuda"</span> <span class="kw">if</span> torch.cuda.is_available() <span class="kw">else</span> <span class="str">"cpu"</span>)  <span class="cm"># GPU milega toh GPU, nahi toh CPU</span>
+model  = <span class="cls">MLP</span>().to(device)                              <span class="cm"># Model device pe load karo</span>
+criterion = nn.CrossEntropyLoss()                      <span class="cm"># Multi-class ke liye loss function</span>
+optimizer = optim.Adam(model.parameters(), lr=<span class="num">1e-3</span>)    <span class="cm"># Adam optimizer — lr=0.001 standard hai</span>
+
+<span class="cm hi"># --- Training loop ---</span>
+train_losses = []
+<span class="kw">for</span> epoch <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):                                  <span class="cm"># 5 epochs — 5 baar poora data dekhega</span>
+    model.train()                                       <span class="cm"># Training mode on karo</span>
+    total_loss = <span class="num">0</span>
+    <span class="kw">for</span> imgs, labels <span class="kw">in</span> train_loader:
+        imgs, labels = imgs.to(device), labels.to(device)  <span class="cm"># Data device pe bhejo</span>
+        optimizer.zero_grad()                           <span class="cm"># ZAROORI: purane gradients clear karo</span>
+        loss = criterion(model(imgs), labels)           <span class="cm"># Loss calculate karo</span>
+        loss.backward()                                 <span class="cm"># Backpropagation — gradients compute</span>
+        optimizer.step()                                <span class="cm"># Weights update karo</span>
+        total_loss += loss.item()
+    avg_loss = total_loss / len(train_loader)
+    train_losses.append(avg_loss)
+    <span class="fn">print</span>(<span class="str">f"Epoch {epoch+1}/5 | Loss: {avg_loss:.4f}"</span>)   <span class="cm"># Progress track karo</span>
+
+<span class="cm hi"># --- Test accuracy calculate karo ---</span>
+model.eval()                                           <span class="cm"># Eval mode — dropout off</span>
+correct = total = <span class="num">0</span>
+<span class="kw">with</span> torch.no_grad():                                  <span class="cm"># Gradients mat compute karo — memory bachao</span>
+    <span class="kw">for</span> imgs, labels <span class="kw">in</span> test_loader:
+        imgs, labels = imgs.to(device), labels.to(device)
+        preds = model(imgs).argmax(<span class="num">1</span>)                  <span class="cm"># Sabse confident class lo</span>
+        correct += (preds == labels).sum().item()
+        total += labels.size(<span class="num">0</span>)
+<span class="fn">print</span>(<span class="str">f"🎯 Test Accuracy: {correct/total:.2%}"</span>)         <span class="cm"># Final accuracy print karo</span></pre>
+      </div>
+
+      <div class="viz-box">
+        <span class="icon2">📊</span>
+        <div><strong style="color: var(--text);">Visualization Idea:</strong> (1) Training Loss vs Epochs ka line plot — students dekhte hain loss kaise ghatti hai. (2) 5x2 grid mein FashionMNIST images dikhao — actual label vs predicted label. (3) Confusion matrix plot karo — kaunsa class kahan galat hota hai (T-shirt vs Shirt sabse confusing hota hai!).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SECTION 7: QUIZ ===================== -->
+<div class="section" id="quiz">
+  <div class="section-label">Section 07</div>
+  <div class="section-title">❓ 5 MCQ Quiz — Concepts Test Karo</div>
+
+  <div class="quiz-grid">
+
+    <div class="quiz-card">
+      <div class="quiz-q"><span class="quiz-num">1</span> <span>Supervised learning mein kaunsa zaroor hona chahiye training ke waqt?</span></div>
+      <div class="quiz-options">
+        <div class="opt wrong">A) GPU hardware</div>
+        <div class="opt correct">B) Labeled training data</div>
+        <div class="opt wrong">C) Reward function</div>
+        <div class="opt wrong">D) Multiple clusters</div>
+      </div>
+      <div class="answer-reveal">✅ <strong>Answer: B</strong> — Supervised learning ka core requirement labeled data hai. Bina labels ke model "sahi" ya "galat" nahi jaanta.</div>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-q"><span class="quiz-num">2</span> <span>K-Means clustering mein 'k' kya represent karta hai?</span></div>
+      <div class="quiz-options">
+        <div class="opt wrong">A) Learning rate</div>
+        <div class="opt wrong">B) Training iterations</div>
+        <div class="opt correct">C) Number of clusters</div>
+        <div class="opt wrong">D) Neural network layers</div>
+      </div>
+      <div class="answer-reveal">✅ <strong>Answer: C</strong> — 'k' = kitne groups mein data divide karna hai. Elbow method se best k choose karte hain.</div>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-q"><span class="quiz-num">3</span> <span>Reinforcement Learning mein agent ko "seekhne" ke liye kya milta hai?</span></div>
+      <div class="quiz-options">
+        <div class="opt wrong">A) Labeled dataset</div>
+        <div class="opt wrong">B) Cluster assignment</div>
+        <div class="opt correct">C) Reward signal</div>
+        <div class="opt wrong">D) Gradient values</div>
+      </div>
+      <div class="answer-reveal">✅ <strong>Answer: C</strong> — RL mein koi labels nahi, sirf reward/penalty. Positive reward = accha action, negative = bura.</div>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-q"><span class="quiz-num">4</span> <span>PyTorch training loop mein optimizer.zero_grad() kyun lagana zaroori hai?</span></div>
+      <div class="quiz-options">
+        <div class="opt correct">A) Purane gradients accumulate na ho jaayein</div>
+        <div class="opt wrong">B) Learning rate reset karne ke liye</div>
+        <div class="opt wrong">C) Model ko CPU pe rakhne ke liye</div>
+        <div class="opt wrong">D) Weights freeze karne ke liye</div>
+      </div>
+      <div class="answer-reveal">✅ <strong>Answer: A</strong> — PyTorch by default gradients add karta rehta hai. Har batch se pehle zero_grad() zaroor karo, warna galat updates honge.</div>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-q"><span class="quiz-num">5</span> <span>Semi-supervised learning ka sabse bada advantage kya hai?</span></div>
+      <div class="quiz-options">
+        <div class="opt wrong">A) Sirf GPU pe chalta hai</div>
+        <div class="opt wrong">B) K clusters automatically choose karta hai</div>
+        <div class="opt correct">C) Thode labeled + bahut unlabeled data se kaam chalta hai</div>
+        <div class="opt wrong">D) Reward shaping ki zaroorat nahi</div>
+      </div>
+      <div class="answer-reveal">✅ <strong>Answer: C</strong> — Real world mein labeling costly hai. Semi-supervised: 10% labeled data se bhi 80%+ accuracy possible! Medical imaging mein bahut kaam aata hai.</div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SECTION 8: EXERCISES ===================== -->
+<div class="section" id="exercises">
+  <div class="section-label">Section 08</div>
+  <div class="section-title">💪 3 Classroom Exercises — Haath se karo!</div>
+
+  <div class="ex-grid">
+
+    <div class="ex-card">
+      <div class="ex-header">
+        <span class="ex-num">Exercise 01</span>
+        <span class="ex-title">🌸 Iris Comparison — Kitne Algorithms, Kitna Fark?</span>
+      </div>
+      <div class="ex-body">
+        <p><strong style="color: var(--text);">Task:</strong> Iris dataset pe teen algorithms (Decision Tree, KNN, Logistic Regression) train karo aur unka test accuracy compare karo. Sabse pehle StandardScaler lagao.</p>
+        <p><strong style="color: var(--text);">Hint:</strong> <code style="background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono'; font-size: 12px;">from sklearn.neighbors import KNeighborsClassifier</code> aur <code style="background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono'; font-size: 12px;">from sklearn.linear_model import LogisticRegression</code> use karo.</p>
+        <p><strong style="color: var(--text);">Bonus:</strong> Bar chart banao jisme teeno ka accuracy compare ho.</p>
+        <div class="ex-output">Expected Output:
+Decision Tree  Accuracy: ~96%
+KNN (k=5)      Accuracy: ~97%
+Logistic Reg   Accuracy: ~97%
+
+Bar chart with 3 colored bars (same scale)</div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-header">
+        <span class="ex-num">Exercise 02</span>
+        <span class="ex-title">🎯 Elbow Method — Best K Dhundho</span>
+      </div>
+      <div class="ex-body">
+        <p><strong style="color: var(--text);">Task:</strong> make_blobs se 500 points, 4 centers banao. Phir k=1 se k=10 tak K-Means chalao aur har k ka inertia_ record karo. Elbow plot banao — best k kahan hai?</p>
+        <p><strong style="color: var(--text);">Hint:</strong> <code style="background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono'; font-size: 12px;">kmeans.inertia_</code> se inertia milta hai. StandardScaler lagana mat bhoolna!</p>
+        <p><strong style="color: var(--text);">Bonus:</strong> Silhouette score bhi plot karo — kya dono plots same k suggest karte hain?</p>
+        <div class="ex-output">Expected Output:
+Elbow plot — inertia drops sharply till k=4, then flattens
+Best k = 4 (matches true centers=4)
+
+Silhouette plot peaks at k=4 → Consistent result!</div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-header">
+        <span class="ex-num">Exercise 03</span>
+        <span class="ex-title">🧠 FashionMNIST Prediction — Apni Images Dikhao</span>
+      </div>
+      <div class="ex-body">
+        <p><strong style="color: var(--text);">Task:</strong> Trained MLP model se test set ke pehle 10 images lo. Unhe 2x5 grid mein plot karo. Har image ke neeche actual label aur predicted label likho. Ghalat predictions ko red mein dikhao.</p>
+        <p><strong style="color: var(--text);">Hint:</strong> FashionMNIST classes: ['T-shirt', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Boot']</p>
+        <p><strong style="color: var(--text);">Bonus:</strong> confusion_matrix aur seaborn heatmap banao — kaunsi do classes sabse zyada confuse hoti hain?</p>
+        <div class="ex-output">Expected Output:
+2x5 grid of grayscale clothing images
+Green title = correct prediction
+Red title   = wrong prediction (usually Shirt vs T-shirt)
+
+Confusion matrix heatmap showing T-shirt/Shirt confusion</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SECTION 9: PROJECTS ===================== -->
+<div class="section" id="projects">
+  <div class="section-label">Section 09</div>
+  <div class="section-title">🚀 3 Student Project Ideas</div>
+
+  <div class="proj-grid">
+
+    <div class="proj-card">
+      <div class="proj-num">01</div>
+      <div class="proj-tag">Beginner · Supervised ML</div>
+      <div class="proj-title">🌿 Plant Disease Classifier</div>
+      <div class="proj-desc">Kaggle se Plant Village dataset lo. Decision Tree, Random Forest, aur SVM se leaf images classify karo — healthy ya diseased? Real agriculture problem — industry mein demand hai.</div>
+      <div class="proj-deliverables">
+        <div class="d-item">Cleaned dataset with EDA notebook (class distribution, sample images)</div>
+        <div class="d-item">3 model comparison — accuracy, precision, recall, confusion matrix</div>
+        <div class="d-item">Best model save karo (joblib) + simple prediction function</div>
+        <div class="d-item">2-page report: "Kya ML kisan ki madad kar sakta hai?"</div>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">02</div>
+      <div class="proj-tag">Intermediate · Unsupervised + Semi-Supervised</div>
+      <div class="proj-title">🛒 E-Commerce Customer Segmentation</div>
+      <div class="proj-desc">UCI Online Retail dataset — customers ko purchase behavior se segment karo. K-Means + PCA visualization. Phir semi-supervised se "VIP" customers predict karo sirf thode labels se.</div>
+      <div class="proj-deliverables">
+        <div class="d-item">RFM Analysis (Recency, Frequency, Monetary) notebook with charts</div>
+        <div class="d-item">K-Means clustering — 4-5 segments, each segment ka profile describe karo</div>
+        <div class="d-item">PCA 2D scatter plot — colorful cluster visualization</div>
+        <div class="d-item">Semi-supervised experiment: 20% vs 50% labels se accuracy comparison</div>
+        <div class="d-item">Business recommendations: har segment ke liye marketing strategy</div>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">03</div>
+      <div class="proj-tag">Advanced · Deep Learning + RL</div>
+      <div class="proj-title">🎮 Digit Recognizer + RL Mini-Game</div>
+      <div class="proj-desc">Do-part project: (1) PyTorch CNN se MNIST digits recognize karo — webcam se live test karo. (2) CartPole pe simple Q-Learning agent train karo — random policy se improve karo.</div>
+      <div class="proj-deliverables">
+        <div class="d-item">CNN model with 99%+ MNIST accuracy (+ training loss/accuracy plots)</div>
+        <div class="d-item">Simple Flask/Streamlit app — browser mein digit draw karo, model predict kare</div>
+        <div class="d-item">Q-Table RL agent for CartPole — episode rewards: random vs trained comparison</div>
+        <div class="d-item">Video screen recording: agent pole balance karta hua (500 steps!)</div>
+        <div class="d-item">Presentation: "Random agent vs Trained agent — kitna fark pada aur kyun?"</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SECTION 10: TEACHER CHECKLIST ===================== -->
+<div class="section" id="checklist">
+  <div class="section-label">Section 10</div>
+  <div class="section-title">✅ Teacher Pre-Class Checklist</div>
+  <p style="color: var(--muted); font-size: 13.5px; margin-bottom: 24px;">Class se pehle ye sab verify karo — 15 minute pehle lab mein jaao aur ek baar sab run karo.</p>
+
+  <div class="checklist-grid">
+
+    <div class="check-group">
+      <h4>⚙️ Environment Setup</h4>
+      <div class="check-item"><div class="checkbox"></div><span>Python 3.8+ installed hai (python --version)</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>scikit-learn install: <code style="font-family: 'JetBrains Mono'; font-size: 11px; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 3px;">pip install scikit-learn</code></span></div>
+      <div class="check-item"><div class="checkbox"></div><span>PyTorch install: <code style="font-family: 'JetBrains Mono'; font-size: 11px; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 3px;">pip install torch torchvision</code></span></div>
+      <div class="check-item"><div class="checkbox"></div><span>gymnasium install: <code style="font-family: 'JetBrains Mono'; font-size: 11px; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 3px;">pip install gymnasium</code></span></div>
+      <div class="check-item"><div class="checkbox"></div><span>matplotlib, numpy, pandas bhi install hain</span></div>
+    </div>
+
+    <div class="check-group">
+      <h4>📊 Datasets Check</h4>
+      <div class="check-item"><div class="checkbox"></div><span>Iris — <code style="font-family: 'JetBrains Mono'; font-size: 11px;">load_iris()</code> offline kaam karta hai ✓</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>make_blobs — synthetic, koi download nahi ✓</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>FashionMNIST — pehle se download karo (internet slow ho sakta hai): <code style="font-family: 'JetBrains Mono'; font-size: 11px;">download=True</code> ek baar run karo</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>CartPole — gymnasium ke saath aata hai, alag download nahi</span></div>
+    </div>
+
+    <div class="check-group">
+      <h4>💻 Code Dry Run</h4>
+      <div class="check-item"><div class="checkbox"></div><span>Supervised (Decision Tree) — poora cell run karo, accuracy ~96% aani chahiye</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>Unsupervised (K-Means) — silhouette score ~0.7+ aana chahiye</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>Semi-Supervised — accuracy ~85%+ labeled portion pe</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>RL (CartPole) — 50 episodes, average reward ~10-20 expected</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>DL (FashionMNIST) — 5 epochs mein test accuracy ~87% expected</span></div>
+    </div>
+
+    <div class="check-group">
+      <h4>🎓 Classroom Prep</h4>
+      <div class="check-item"><div class="checkbox"></div><span>Cheatsheet print karo ya PDF share karo — ek per student</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>Quiz answers hide karo — class ke baad reveal karo</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>Whiteboard pe "5 types" ka diagram bana ke rakho</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>Students ke liye Jupyter Notebook / Google Colab link ready karo</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>Backup plan: Colab link — agar lab mein install issue aaye</span></div>
+    </div>
+
+    <div class="check-group">
+      <h4>❓ Common Student Questions</h4>
+      <div class="check-item"><div class="checkbox"></div><span>"GPU zaroori hai?" → Nahi, CPU pe bhi chalega (thoda slow)</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>"Kaunsa best hai?" → Depends on problem — har ek ka use case hai</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>"Accuracy 100% ho sakti hai?" → Haan, par overfitting hoti hai</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>"RL aur supervised mein fark?" → RL = trial-error + reward, no dataset</span></div>
+    </div>
+
+    <div class="check-group">
+      <h4>⏱️ Time Allocation (3-hr Class)</h4>
+      <div class="check-item"><div class="checkbox"></div><span>0:00 – 0:20 → Cheatsheet walkthrough + intuitions</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>0:20 – 1:00 → Supervised + Unsupervised live coding</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>1:00 – 1:30 → Semi-Supervised + RL demo</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>1:30 – 2:15 → Deep Learning MLP training (watch loss drop!)</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>2:15 – 2:45 → Exercises (pairs mein karo)</span></div>
+      <div class="check-item"><div class="checkbox"></div><span>2:45 – 3:00 → Quiz + Project ideas discuss karo</span></div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<div class="footer">
+  <p>🎓 ML Classroom Package — Hinglish Edition · Supervised · Unsupervised · Semi-Supervised · RL · Deep Learning</p>
+  <p style="margin-top: 6px; font-size: 11px;">scikit-learn · gymnasium · PyTorch · matplotlib · numpy · 20+ saal ke tajurbe ke saath banaya gaya</p>
+</div>
+
+</body>
+</html>
